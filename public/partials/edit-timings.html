@@ -1,0 +1,412 @@
+<!-- <div class="col-sm-4 pull-right select-prayer-hall">
+  <div class="input-group">
+    <span class="input-group-addon">Select Masjid:</span>
+    <select class="form-control" name="OrderBy" ng-model="name">
+      <option class="default-option" value="{{defaultDropdown}}" selected>Nothing Selected</option>
+      <option class="masjid-option" ng-repeat="name in names" value="{{name}}">{{name}}</option>
+    </select>
+  </div>
+</div> -->
+
+<div class="col-sm-4 pull-right select-prayer-hall">
+  <div class="input-group">
+    <span class="input-group-addon">Select Masjid:</span>
+    <select class="form-control" name="OrderBy" ng-model="name" ng-change="edit(name)">
+      <!-- <option class="default-option" value="{{defaultDropdown}}" selected>Nothing Selected</option> -->
+      <option class="masjid-option" ng-repeat="name in contactlist" value="{{name._id}}">{{name.orgName}}</option>
+    </select>
+  </div>
+</div>
+<!-- <pre class="alert alert-info"> {{ name | json }}</pre>
+<pre class="alert alert-info"> {{ contact | json }}</pre> -->
+
+<div class="panel-group" id="accordion">
+
+  <!-- Add Masjid Panel -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="accordion-toggle accordion-anchor" data-toggle="collapse" onclick="return false;" ng-click="toggle(1)" data-parent="#accordion" href="#panel1">
+            <i class="glyphicon {{ isActive.tab1 ? 'glyphicon-minus': 'glyphicon-plus'}}"></i>
+            <span>Add Masjid</span>
+        </a>
+      </h4>
+    </div>
+    <div id="panel1" class="panel-collapse collapse">
+      <div class="panel-body panel-add-block" id="add-block">
+        <div class="add-block-wrapper">
+            <section>
+              <article class="pull-left">
+                <div class="list-group">
+                  <h3> Add Masjid Information</h3>
+                  <hr />
+                  <label>Name:</label>
+                  <input class="form-control" type="text" ng-model="item.orgName" id="lg" placeholder="Name of the Masjid or Organization">
+                  <br />
+                  <label>Contact Person:</label>
+                  <input class="form-control" type="text" ng-model="item.contactPerson" name="conta" id="lg" placeholder="Contact Person">
+                  <br />
+                  <label>Contact Number:</label>
+                  <input class="form-control" type="number" ng-model="item.contactNumber" name="author" id="lg" placeholder="Contact Number">
+                  <br />
+                </div>
+              </article>
+    
+              <article class="pull-right">
+                <table class="table table-prayer-hall-details" ng-show="!!item.orgName">
+                  <thead>
+                    <tr>
+                      <th colspan="2">Masjid Information</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Masjid/Organization</td>
+                      <td>{{item.orgName}}</td>
+                    </tr>
+                    <tr>
+                      <td>Contact Person</td>
+                      <td>{{item.contactPerson}}</td>
+                    </tr>
+                    <tr>
+                      <td>Contact Number</td>
+                      <td>{{item.contactNumber}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </article>
+            </section>
+    
+            <section>
+              <article class="pull-left">
+                <div class="list-group">
+                  <h3> Add Prayer Times</h3>
+                  <hr />
+                  <label>Salah:</label>
+                  <input class="form-control" type="text" ng-model="prayerObj.salah" />
+                  <br />
+                  <label>Iqama:</label>
+                  <input type="text" class="form-control time-picker" size="8" ng-model="prayerObj.iqama" bs-timepicker>
+                  <br />
+                  <button class="btn btn-primary" ng-click="add('PRAYER_TIME')">Add</button>
+                  <button class="btn btn-danger" ng-click="reset('PRAYER_TIME')">Reset Prayer Times</button>
+                  <br /> </div>
+              </article>
+    
+              <article class="pull-right">
+                <table class="table" ng-show="item.prayer.length">
+                  <thead>
+                    <tr>
+                      <th>Salah</th>
+                      <th>Iqama</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="p in item.prayer">
+                      <td>{{ p.salah }}</td>
+                      <td>{{ p.iqama | date:'h:mm a'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </article>
+            </section>
+    
+            <section>
+              <article class="pull-left">
+                <div class="list-group">
+                  <h3> Add Events</h3>
+                  <hr />
+                  <label>Event Date:</label>
+                  <input class="form-control" type="text" ng-model="eventObj.date" bs-datepicker/>
+                  <br />
+                  <label>Event Time:</label>
+                  <input type="text" class="form-control time-picker" size="8" ng-model="eventObj.time" bs-timepicker />
+                  <br />
+                  <label>Event Name:</label>
+                  <input type="text" class="form-control" ng-model="eventObj.name" />
+                  <br />
+                  <label>Notes:</label>
+                  <textarea type="text" class="form-control" size="8" ng-model="eventObj.notes"></textarea>
+                  <br />
+                  <button class="btn btn-primary" ng-click="add('EVENT')">Add</button>
+                  <button class="btn btn-danger" ng-click="reset('EVENT')">Reset Events</button>
+                  <br />
+                </div>
+              </article>
+    
+              <article class="pull-right">
+                <table class="table" ng-show="item.events.length">
+                  <thead>
+                    <tr>
+                      <th>Event Date</th>
+                      <th>Event Time</th>
+                      <th>Event Name</th>
+                      <th>About</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="event in item.events">
+                      <td>{{event.date | date:'MM/dd/yyyy'}}</td>
+                      <td>{{event.time | date:'h:mm a '}}</td>
+                      <td>{{event.name}}</td>
+                      <td>{{event.notes}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </article>
+            </section>
+    
+            <section>
+              <article class="pull-left">
+                <div class="list-group">
+                  <h3> Add Announcements</h3>
+                  <hr />
+                  <label>Date:</label>
+                  <input class="form-control" type="text" ng-model="announcementObj.date" bs-datepicker/>
+                  <br />
+                  <label>Announcement:</label>
+                  <textarea type="text" class="form-control" size="8" ng-model="announcementObj.notes"></textarea>
+                  <br />
+                  <button class="btn btn-primary" ng-click="add('ANNOUNCEMENT')">Add</button>
+                  <button class="btn btn-danger" ng-click="reset('ANNOUNCEMENT')">Reset Announcements</button>
+                  <br />
+                </div>
+              </article>
+    
+              <article class="pull-right">
+                <table class="table" ng-show="item.announcements.length">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Announcement</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="announcement in item.announcements">
+                      <td>{{announcement.date | date:' MM/dd/yyyy'}}</td>
+                      <td>{{announcement.notes}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </article>
+            </section>
+            <section class="action-btns-main">
+                <div class="action-btns-main-wrapper">
+                    <button class="btn btn-warning" ng-click="viewJSON = !viewJSON">View JSON</button>
+                    <button class="btn btn-danger" ng-click="reset('ALL')">Clear All</button>
+                    <button class="btn btn-primary" ng-click="addRecords(item)">Add Masjid</button>
+                </div>
+            </section>
+        </div>
+        <pre class="alert alert-info" ng-show="viewJSON">{{ item | json }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Prayer Time Panel -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="accordion-toggle accordion-anchor" data-toggle="collapse" onclick="return false;" ng-click="toggle(2)" data-parent="#accordion" href="#panel2">
+            <i class="glyphicon {{ isActive.tab2 ? 'glyphicon-minus': 'glyphicon-plus'}}"></i>
+            <span>Add Prayer Time</span>
+        </a>
+       </h4>
+    </div>
+    <div id="panel2" class="panel-collapse collapse">
+      <div class="panel-body panel-update-block">
+        <div class="well update-timings-container">
+          <div class="form-group">
+            <h4>Add Prayer Time</h4>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Salah</label>
+            <input class="form-control" ng-model="contact.salah" />
+          </div>
+          <div class="form-group">
+            <label class="control-label">Iqama</label>
+            <input type="text" class="form-control time-picker" size="8" ng-model="contact.iqama" name="time" bs-timepicker>
+          </div>
+          <div class="form-group">
+            <pre class="alert alert-info">{{ contact.salah ? contact.salah  + ' salah is at:' : '' }} {{ contact.iqama ? contact.iqama : 'N/A' | date:'h:mm a' }}</pre>
+          </div>
+          <button class="btn btn-info" ng-click="addContact(contact)">Add</button>
+          <!-- <button class="btn btn-default" ui-sref="edit">Cancel</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Events & Announcements Panel -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="accordion-toggle accordion-anchor" data-toggle="collapse" onclick="return false;" ng-click="toggle(3)" data-parent="#accordion" href="#panel3">
+            <i class="glyphicon {{ isActive.tab3 ? 'glyphicon-minus': 'glyphicon-plus'}}"></i>
+            <span>Add Events & Announcements</span>
+        </a>
+        </h4>
+    </div>
+    <div id="panel3" class="panel-collapse collapse">
+      <div class="panel-body">
+        WIP
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Masjid Details Panel -->
+  <div class="panel panel-default edit-prayer-hall-details">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="accordion-toggle accordion-anchor" data-toggle="collapse" onclick="return false;" ng-click="toggle(4)" data-parent="#accordion" href="#panel4">
+            <i class="glyphicon {{ isActive.tab4 ? 'glyphicon-minus': 'glyphicon-plus'}}"></i>
+            <span>Edit Masjid Details</span>
+        </a>
+       </h4>
+    </div>
+    <div id="panel4" class="panel-collapse collapse">
+      <div class="panel-body">
+        <section>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Masjid/Organization</th>
+                  <th>Contact Person</th>
+                  <th>Contact Number</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{item.orgName}}</td>
+                  <td>{{item.contactPerson}}</td>
+                  <td>{{item.contactNumber}}</td>
+                  <td class="action-btns" ng-init="isEditActive=false">
+                    <a href="#" ng-click="isEditActive = !isEditActive" onclick="return false;">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </section>
+        <section ng-show="isEditActive">
+          <div class="pull-left">
+            <div class="list-group">
+              <h3>Edit Masjid Information</h3>
+              <hr />
+              <label>Name:</label>
+              <input class="form-control" type="text" ng-model="item.orgName" id="lg" placeholder="Name of the Masjid or Organization">
+              <br />
+              <label>Contact Person:</label>
+              <input class="form-control" type="text" ng-model="item.contactPerson" name="conta" id="lg" placeholder="Contact Person">
+              <br />
+              <label>Contact Number:</label>
+              <input class="form-control" type="number" ng-model="item.contactNumber" name="author" id="lg" placeholder="Contact Number">
+              <br />
+            </div>
+          </div>
+          <div class="action-btns">
+            <button class="btn btn-primary" ng-click="edit(item._id); " onclick="return false;">Update</button>
+            <button class="btn btn-default">Cancel</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Prayer Times Panel -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="accordion-toggle accordion-anchor" data-toggle="collapse" onclick="return false;" ng-click="toggle(5)" data-parent="#accordion" href="#panel5">
+            <i class="glyphicon {{ isActive.tab5 ? 'glyphicon-minus': 'glyphicon-plus'}}"></i>
+            <span>Edit Prayer Times</span>
+         </a>
+       </h4>
+    </div>
+    <div id="panel5" class="panel-collapse collapse">
+      <div class="panel-body panel-update-block">
+        <table class="table" ng-show="isEditTab">
+          <thead>
+            <tr>
+              <th>Salah</th>
+              <th>Iqama</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="contact in contactlist">
+              <td>{{contact.salah}}</td>
+              <td>{{contact.iqama | date:'h:mm a'}}</td>
+              <td class="action-btns">
+                <a href="#" id="editBtn" ng-click="edit(contact._id)" onclick="return false;"><i class="glyphicon glyphicon-edit"></i></a>
+                <span>|</span>
+                <a href="#" id="deleteBtn" ng-click="remove(contact._id)" onclick="return false;"><i class="glyphicon glyphicon-trash"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- <table class="table" ng-show="!isEditTab">
+          <thead>
+            <tr>
+              <th>Salah</th>
+              <th>Iqama</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="c in contact.prayer">
+              <td>{{c.salah}}</td>
+              <td>{{c.iqama | date:'h:mm a'}}</td>
+              <td class="action-btns">
+                <a href="#" id="editBtn" ng-click="edit(c.id)" onclick="return false;"><i class="glyphicon glyphicon-edit"></i></a>
+                <span>|</span>
+                <a href="#" id="deleteBtn" ng-click="remove(c.id)" onclick="return false;"><i class="glyphicon glyphicon-trash"></i></a>
+              </td>
+            </tr>
+            <pre class="alert alert-info">{{c.id}}</pre>
+          </tbody>
+        </table> -->
+        <div class="well update-timings-container" ng-hide="!isUpdateTab">
+          <div class="form-group">
+            <h4>Update Daily Prayer Times</h4>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Salah</label>
+            <input class="form-control" ng-model="contact.salah" />
+          </div>
+          <div class="form-group">
+            <label class="control-label">Iqama</label>
+            <input type="text" class="form-control time-picker" size="8" ng-model="contact.iqama" name="time" bs-timepicker>
+          </div>
+          <div class="form-group">
+            <pre class="alert alert-info">{{ contact.salah ? contact.salah  + ' salah is at:' : '' }} {{ contact.iqama ? contact.iqama : '' | date:'h:mm a' }}</pre>
+          </div>
+          <div class="form-group">
+            <pre>Last Updated On: {{ contact.lastUpdated ? contact.lastUpdated : 'N/A' | date:"MM/dd/yyyy 'at' h:mm a" }}</pre>
+          </div>
+          <button class="btn btn-info" ng-click="updateRecords()">Update</button>
+          <button class="btn btn-default" ng-click="deselect()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Events & Announcements Panel -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+          <a class="accordion-toggle accordion-anchor" data-toggle="collapse" onclick="return false;" ng-click="toggle(6)" data-parent="#accordion" href="#panel6">
+            <i class="glyphicon {{ isActive.tab6 ? 'glyphicon-minus': 'glyphicon-plus'}}"></i>
+            <span>Edit Events & Announcements</span>
+          </a>
+      </h4>
+    </div>
+    <div id="panel6" class="panel-collapse collapse">
+      <div class="panel-body">
+        WIP
+      </div>
+    </div>
+  </div>
+</div>

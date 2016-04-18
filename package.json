@@ -1,0 +1,16 @@
+{
+  "name": "AzaanTimeApp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.4.2",
+    "method-override": "~2.0.2",
+    "express": "3.x",
+    "mongodb": "~2.0.36",
+    "mongojs": "^0.18.1",
+    "mongoose": "^4.1.12"
+  }
+}

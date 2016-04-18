@@ -1,0 +1,39 @@
+<!DOCTYPE>
+<html ng-app="myApp">
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" >
+    <link rel="stylesheet" href="https://mgcrea.github.io/angular-strap/styles/libs.min.css" >
+    <link rel="stylesheet" href="https://mgcrea.github.io/angular-strap/styles/docs.min.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="css/style.css" >
+
+    <title>AzaanTime App</title>
+</head>
+<body class="{{ viewClass ? viewClass : ''}}">
+  <div ng-include="'partials/header.html'" class="header-navbar"></div>
+  <div ng-include="'partials/templates.html'" class="header-navbar"></div>
+  <div class="container-fluid container-main" ng-controller="AppCtrl" >
+    <div class="dashboard-view" ui-view></div>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.js"></script>
+<script src="//mgcrea.github.io/angular-strap/dist/angular-strap.js" data-semver="v2.3.8"></script>
+<script src="//mgcrea.github.io/angular-strap/dist/angular-strap.tpl.js" data-semver="v2.3.8"></script>
+<script src="//mgcrea.github.io/angular-strap/docs/angular-strap.docs.tpl.js" data-semver="v2.3.8"></script>
+
+
+<script src="lib/ui-routing/angular-ui-router.js"></script>
+<script src="js/app.js"></script>
+<script src="js/controllers/controller.js"></script>
+<script src="js/services/utilService.js"></script>
+<script src="js/routing.js"></script>
+</body>
+</html>
