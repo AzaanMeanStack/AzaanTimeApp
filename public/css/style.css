@@ -43,6 +43,9 @@
     background-color: #fff !important;
 }
 
+.panel {
+    margin-bottom: 15px !important;
+}
 /* .panel-body {
 	background-color: #F9F9F9;
 } */
@@ -163,6 +166,14 @@ div#accordion a {
 
 .accordion-anchor:hover {
 	text-decoration: none !important;
+}
+
+.accordion-toggle i:before {
+	content: "\2212";
+}
+
+.accordion-toggle.collapsed i:before {
+    content: "\002b";
 }
 
 div#add-block {

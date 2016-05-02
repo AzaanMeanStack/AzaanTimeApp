@@ -1,10 +1,17 @@
+/**
+ * Author : Shoukath Mohammed
+ * Date   : 05/01/2016
+ * Time   : 08:00 PM EST
+ * Created with eclipse
+ */
+
 angular
     .module('myApp')
     .controller('AppCtrl', AppCtrl);
 
-AppCtrl.$inject = ['$scope', '$http', '$log', '$stateParams', '$state', 'utilService'];
+AppCtrl.$inject = ['$scope', '$http', '$log', '$stateParams', '$state', 'utilService', '$window'];
 
-function AppCtrl($scope, $http, $log, $stateParams, $state, utilService) {
+function AppCtrl($scope, $http, $log, $stateParams, $state, utilService, $window) {
 
     var that = this;
 
@@ -21,44 +28,42 @@ function AppCtrl($scope, $http, $log, $stateParams, $state, utilService) {
     $scope.viewJSON = false;
     $scope.isEditTab = true;
     $scope.isUpdateTab = false;
-    $scope.defaultDropdown = "default";
-
-    //$scope.names = ["test", "test1", "test2", "test3", "test4"];
-
-    $scope.isActive = {
-        tab1: false,
-        tab2: false,
-        tab3: false,
-        tab4: false,
-        tab5: false
-    };
-
-    $scope.toggle = function(currentTab) {
-        $scope.isActive['tab' + currentTab ] = !$scope.isActive['tab' + currentTab];
-    };
 
     $scope.refresh = function() {
         $http.get('/contactlist').success(function(response) {
             $scope.contactlist = response;
+            $scope.getDynamicOptions(response);
             $scope.contact = "";
+        });
+    };
+
+    $scope.getDynamicOptions =  function(response) {
+        $scope.options = [{_id: "DEFAULT", orgName:"Select an option"}];
+
+        var arr = _.map(response, function(org) {
+            return _.pick(org, '_id', 'orgName');
+        });
+
+        _.each(arr, function(arg) {
+            $scope.options.push(arg);
         });
     };
 
     $scope.refresh();
 
-    $scope.addContact = function(rec) {
-        $scope.contact = rec;
-        if ( !_.isEmpty(rec) ) {
-            $http.post('/contactlist', $scope.contact).success(function(response) {
+    $scope.addOrganization = function(obj) {
+        if ( !_.isEmpty(obj) ) {
+            $http.post('/contactlist', obj).success(function(response) {
                 $scope.refresh();
-                utilService.showAlert('success','Record successfully added.');
+                utilService.showAlert('success','Masjid successfully added.');
+                $scope.refresh();
             });
         } else {
             utilService.showAlert('danger', 'Fields cannot be empty.');
         }
     };
 
-    $scope.remove = function(id) {
+    $scope.deleteOrganization = function(id) {
         $http['delete']('/contactlist/' + id).success(function(response) {
             $scope.refresh();
             utilService.showAlert('success','Record successfully deleted.');
@@ -66,8 +71,7 @@ function AppCtrl($scope, $http, $log, $stateParams, $state, utilService) {
     };
 
     $scope.edit = function(id) {
-        var url = (id.length > 4) ? ('/contactlist/' + id) : ('/contactlist/prayer/' + id);
-        $http.get(url).success(function(response) {
+        $http.get('/contactlist/' + id).success(function(response) {
             if (response) {
                 $scope.contact = response;
                 $scope.setActiveTab("UPDATE");
@@ -75,17 +79,110 @@ function AppCtrl($scope, $http, $log, $stateParams, $state, utilService) {
         });
     };
 
-    $scope.updateRecords = function() {
+    $scope.loadData = function(id) {
+        if ( id != "DEFAULT" ) {
+            $http.get('/contactlist/' + id).success(function(response) {
+                if (response) {
+                    $scope.contact = response;
+                    $scope.setActiveTab("EDIT");
+                }
+            });
+        } else {
+            $scope.contact = "";
+        }
+    };
+
+    $scope.updatePrayer = function(id) {
+
+        // updates the prayer array with the latest object
+        var index =  _.findIndex($scope.contact.prayer, {'id': id });
+        $scope.contact.prayer[index] = $scope.prayerToEdit;
+
+        var obj = _.extend({operation: 'UPDATE_PRAYER'}, $scope.contact.prayer[index]);
+
         if ( !_.isEmpty($scope.contact) ) {
-            $http.put('/contactlist/' + $scope.contact._id, $scope.contact).success(function(response) {
-                $scope.refresh();
+            $http.put('/contactlist/' + $scope.contact._id, obj).success(function(response) {
                 utilService.showAlert('success', 'Successfully Updated.');
                 $scope.setActiveTab("EDIT");
             });
-            $scope.refreshTabs($scope.isActive);
+            $scope.prayerToEdit = "";
         } else {
             utilService.showAlert('danger', 'Fields cannot be empty.');
         }
+    };
+
+    $scope.editPrayer = function(id) {
+        $scope.prayerToEdit = _.findWhere($scope.contact.prayer, {'id': id });
+        $scope.setActiveTab("UPDATE");
+    }
+
+    $scope.addPrayer = function(prayer) {
+        prayer.id = Math.floor(1000 + Math.random() * 9000);
+        var obj = _.extend({operation: 'ADD_PRAYER'}, prayer);
+
+        if ( !_.isEmpty(prayer) ) {
+            $http.put('/contactlist/' + $scope.contact._id, obj).success(function(response) {
+                $scope.resetSelectedOrg();
+                utilService.showAlert('success','Record successfully added.');
+            });
+        } else {
+            utilService.showAlert('danger', 'Fields cannot be empty.');
+        }
+    };
+
+    $scope.updateItem = function(id, operation, itemType) {
+        var arr;
+        // updates the prayer array with the latest object
+
+        if(itemType == 'EVENT') {
+            arr = $scope.contact.events;
+        } else {
+            arr = $scope.contact.announcements;
+        }
+        var index =  _.findIndex(arr, {'id': id });
+        (itemType=="EVENT") ? ($scope.contact.events[index] = $scope.itemToEdit) : ($scope.contact.announcements[index] = $scope.itemToEdit);
+
+        var obj = _.extend({operation: operation}, $scope.contact.prayer[index]);
+
+        if ( !_.isEmpty($scope.contact) ) {
+            $http.put('/contactlist/' + $scope.contact._id, obj).success(function(response) {
+                utilService.showAlert('success', 'Successfully Updated.');
+                $scope.setActiveTab("EDIT");
+            });
+            $scope.itemToEdit = "";
+        } else {
+            utilService.showAlert('danger', 'Fields cannot be empty.');
+        }
+    };
+
+    $scope.deleteItem = function(id, itemType) {
+        var _itemToDelete = _.findWhere($scope.contact.prayer, {'id': id });
+        _itemToDelete = _.extend(_itemToDelete, {itemType: itemType});
+
+        var config = {
+                method: "DELETE",
+                url: '/contactlist/' + $scope.contact._id,
+                data: _itemToDelete,
+                headers: {"Content-Type": "application/json;charset=utf-8"}
+        };
+
+        $http(config).success(function(response) {
+            utilService.showAlert('success','Record successfully deleted.');
+        });
+        $scope.resetSelectedOrg();
+    };
+
+    $scope.editEvent = function(id) {
+        $scope.itemToEdit = _.findWhere($scope.contact.events, {'id': id });
+        $scope.setActiveTab("UPDATE");
+    }
+
+    /**
+     * fetch latest data from the database
+     * for selected organization
+     */
+    $scope.resetSelectedOrg = function() {
+        $scope.loadData($scope.contact._id);
     };
 
     $scope.deselect = function() {

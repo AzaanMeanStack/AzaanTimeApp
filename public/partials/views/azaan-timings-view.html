@@ -7,9 +7,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="contact in contactlist">
-                <td>{{contact.salah}}</td>
-                <td>{{contact.iqama | date:'h:mm a'}}</td>
+            <tr ng-repeat="c in contact.prayer">
+                <td>{{c.salah}}</td>
+                <td>{{c.iqama | date:'h:mm a'}}</td>
             </tr>
         </tbody>
     </table>

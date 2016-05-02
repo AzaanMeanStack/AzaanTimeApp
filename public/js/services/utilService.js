@@ -1,5 +1,8 @@
 /**
- *
+ * Author : Shoukath Mohammed
+ * Date   : 05/01/2016
+ * Time   : 08:00 PM EST
+ * Created with eclipse
  */
 angular
     .module('myApp')
