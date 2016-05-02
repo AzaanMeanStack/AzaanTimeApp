@@ -5,10 +5,7 @@
  * Created with eclipse
  */
 
-var app = angular.module('myApp', [
-             'ngAnimate',
-             'ui.router'
-          ]);
+var app = angular.module('myApp', ['ngAnimate', 'ui.router']);
 
 /**
  * Directives declaration
