@@ -1,10 +1,32 @@
 {
-	"name": "angular",
-	"version": "1.0.0",
-	"dependencies": {
-	    "jquery": "latest",
-		"bootstrap": "latest",
-		"angular": "latest",
-		"angular-route": "latest"	
-	}
+  "name": "AzaanMeanStack",
+  "version": "1.0.0",
+  "dependencies": {
+    "jquery": "latest",
+    "bootstrap": "latest",
+    "angular": "latest",
+    "angular-route": "latest"
+  },
+  "authors": [
+    "Mohammed Shoukath <mohammed.shoukath@epsilon.com>"
+  ],
+  "description": "",
+  "main": "app.js",
+  "keywords": [
+    "angularjs",
+    "expressjs",
+    "nodejs",
+    "mongo"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/libs",
+    "test",
+    "tests"
+  ]
 }
