@@ -10,7 +10,10 @@
     "method-override": "~2.0.2",
     "express": "3.x",
     "mongodb": "~2.0.36",
-    "mongojs": "^0.18.1",
+    "mongojs": "latest",
     "mongoose": "^4.1.12"
+  },
+  "devDependencies": {
+    "bson": "^1.0.4"
   }
 }
